@@ -1,0 +1,13 @@
+textonly.ppd
+textonly.filter
+cups.cron
+ncp.backend
+cups.logrotate
+pstoraster.convs
+pstoraster
+cups-lpd
+pstopdf
+cups-libusb.rules
+cupsprinter.png
+cups.init
+cups-1.4.2-source.tar.bz2

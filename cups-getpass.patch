@@ -1,0 +1,42 @@
+--- cups-1.2.6/cups/usersys.c.getpass	2006-08-29 16:51:19.000000000 +0100
++++ cups-1.2.6/cups/usersys.c	2006-11-13 16:19:32.000000000 +0000
+@@ -46,6 +46,8 @@
+ #include "globals.h"
+ #include <stdlib.h>
+ #include <sys/stat.h>
++#include <termios.h>
++#include <signal.h>
+ #ifdef WIN32
+ #  include <windows.h>
+ #endif /* WIN32 */
+@@ -455,7 +457,29 @@
+ const char *				/* O - Password */
+ _cupsGetPassword(const char *prompt)	/* I - Prompt string */
+ {
+-  return (getpass(prompt));
++  static char password[100];
++  struct termios oldtio, newtio;
++  sigset_t oldset, newset;
++  int nread;
++  sigprocmask (SIG_BLOCK, NULL, &newset);
++  sigaddset (&newset, SIGINT);
++  sigaddset (&newset, SIGTSTP);
++  sigprocmask (SIG_BLOCK, &newset, &oldset);
++  tcgetattr (STDIN_FILENO, &oldtio);
++  newtio = oldtio;
++  newtio.c_lflag &= ~ECHO;
++  tcsetattr (STDIN_FILENO, TCSAFLUSH, &newtio);
++  fputs (prompt, stdout);
++  fflush (stdout);
++  nread = read (STDIN_FILENO, password, sizeof (password));
++  tcsetattr (STDIN_FILENO, TCSAFLUSH, &oldtio);
++  fputc ('\n', stdout);
++  sigprocmask (SIG_SETMASK, &oldset, NULL);
++  if (nread > 0)
++    password[nread - 1] = '\0';
++  else
++    password[0] ='\0';
++  return password;
+ }
+ #endif /* WIN32 */
+ 

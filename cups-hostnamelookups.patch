@@ -1,0 +1,21 @@
+diff -up cups-1.4.2/scheduler/network.c.hostnamelookups cups-1.4.2/scheduler/network.c
+--- cups-1.4.2/scheduler/network.c.hostnamelookups	2009-04-28 01:23:38.000000000 +0100
++++ cups-1.4.2/scheduler/network.c	2010-06-10 11:44:29.253630945 +0100
+@@ -155,7 +155,7 @@ cupsdNetIFUpdate(void)
+     * Try looking up the hostname for the address as needed...
+     */
+ 
+-    if (HostNameLookups || RemotePort)
++    if (HostNameLookups)
+       httpAddrLookup((http_addr_t *)(addr->ifa_addr), hostname,
+                      sizeof(hostname));
+     else
+@@ -163,7 +163,7 @@ cupsdNetIFUpdate(void)
+      /*
+       * Map the default server address and localhost to the server name
+       * and localhost, respectively; for all other addresses, use the
+-      * dotted notation...
++      * numeric address...
+       */
+ 
+       if (httpAddrLocalhost((http_addr_t *)(addr->ifa_addr)))

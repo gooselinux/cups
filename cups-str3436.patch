@@ -1,0 +1,33 @@
+diff -up cups-1.4.2/cgi-bin/ipp-var.c.str3436 cups-1.4.2/cgi-bin/ipp-var.c
+--- cups-1.4.2/cgi-bin/ipp-var.c.str3436	2009-11-09 23:01:17.000000000 +0000
++++ cups-1.4.2/cgi-bin/ipp-var.c	2009-12-08 12:19:01.988500453 +0000
+@@ -333,7 +333,7 @@ cgiMoveJobs(http_t     *http,		/* I - Co
+                    NULL, job_uri);
+       ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_KEYWORD,
+                    "requested-attributes", NULL, "job-printer-uri");
+-      
++
+       if ((response = cupsDoRequest(http, request, "/")) != NULL)
+       {
+         if ((attr = ippFindAttribute(response, "job-printer-uri",
+@@ -926,7 +926,7 @@ cgiRewriteURL(const char *uri,		/* I - C
+ 		 ishttps ? "https" : "http",
+ 		 userpass, hostname, port, resource);
+       else
+-	snprintf(url, urlsize, "%s://%s:%d%s", 
++	snprintf(url, urlsize, "%s://%s:%d%s",
+ 		 ishttps ? "https" : "http",
+ 		 hostname, port, resource);
+     }
+@@ -1518,7 +1518,11 @@ cgiShowJobs(http_t     *http,		/* I - Co
+     */
+ 
+     if (dest)
++    {
+       snprintf(val, sizeof(val), "/%s/%s", section, dest);
++      cgiSetVariable("PRINTER_NAME", dest);
++      cgiSetVariable("PRINTER_URI_SUPPORTED", val);
++    }
+     else
+       strlcpy(val, "/jobs/", sizeof(val));
+ 

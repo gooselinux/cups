@@ -1,0 +1,158 @@
+diff -up cups-1.4.2/scheduler/classes.c.str3505 cups-1.4.2/scheduler/classes.c
+--- cups-1.4.2/scheduler/classes.c.str3505	2009-10-07 19:16:09.000000000 +0100
++++ cups-1.4.2/scheduler/classes.c	2010-03-03 12:05:43.719744733 +0000
+@@ -3,7 +3,7 @@
+  *
+  *   Printer class routines for the Common UNIX Printing System (CUPS).
+  *
+- *   Copyright 2007-2009 by Apple Inc.
++ *   Copyright 2007-2010 by Apple Inc.
+  *   Copyright 1997-2007 by Easy Software Products, all rights reserved.
+  *
+  *   These coded instructions, statements, and computer programs are the
+@@ -117,7 +117,7 @@ cupsdAddPrinterToClass(
+  * 'cupsdDeletePrinterFromClass()' - Delete a printer from a class.
+  */
+ 
+-void
++int					/* O - 1 if class changed, 0 otherwise */
+ cupsdDeletePrinterFromClass(
+     cupsd_printer_t *c,			/* I - Class to delete from */
+     cupsd_printer_t *p)			/* I - Printer to delete */
+@@ -149,13 +149,15 @@ cupsdDeletePrinterFromClass(
+               (c->num_printers - i) * sizeof(cupsd_printer_t *));
+   }
+   else
+-    return;
++    return (0);
+ 
+  /*
+   * Update the IPP attributes (have to do this for member-names)...
+   */
+ 
+   cupsdSetPrinterAttrs(c);
++
++  return (1);
+ }
+ 
+ 
+@@ -163,10 +165,11 @@ cupsdDeletePrinterFromClass(
+  * 'cupsdDeletePrinterFromClasses()' - Delete a printer from all classes.
+  */
+ 
+-void
++int					/* O - 1 if class changed, 0 otherwise */
+ cupsdDeletePrinterFromClasses(
+     cupsd_printer_t *p)			/* I - Printer to delete */
+ {
++  int			changed = 0;	/* Any class changed? */
+   cupsd_printer_t	*c;		/* Pointer to current class */
+ 
+ 
+@@ -179,7 +182,7 @@ cupsdDeletePrinterFromClasses(
+        c;
+        c = (cupsd_printer_t *)cupsArrayNext(Printers))
+     if (c->type & (CUPS_PRINTER_CLASS | CUPS_PRINTER_IMPLICIT))
+-      cupsdDeletePrinterFromClass(c, p);
++      changed |= cupsdDeletePrinterFromClass(c, p);
+ 
+  /*
+   * Then clean out any empty implicit classes...
+@@ -193,7 +196,10 @@ cupsdDeletePrinterFromClasses(
+       cupsdLogMessage(CUPSD_LOG_DEBUG, "Deleting implicit class \"%s\"...",
+                       c->name);
+       cupsdDeletePrinter(c, 0);
++      changed = 1;
+     }
++
++  return (changed);
+ }
+ 
+ 
+diff -up cups-1.4.2/scheduler/classes.h.str3505 cups-1.4.2/scheduler/classes.h
+--- cups-1.4.2/scheduler/classes.h.str3505	2008-09-19 21:03:36.000000000 +0100
++++ cups-1.4.2/scheduler/classes.h	2010-03-03 12:05:43.721745310 +0000
+@@ -3,7 +3,7 @@
+  *
+  *   Printer class definitions for the Common UNIX Printing System (CUPS).
+  *
+- *   Copyright 2007-2008 by Apple Inc.
++ *   Copyright 2007-2010 by Apple Inc.
+  *   Copyright 1997-2005 by Easy Software Products, all rights reserved.
+  *
+  *   These coded instructions, statements, and computer programs are the
+@@ -21,9 +21,9 @@
+ extern cupsd_printer_t	*cupsdAddClass(const char *name);
+ extern void		cupsdAddPrinterToClass(cupsd_printer_t *c,
+ 			                       cupsd_printer_t *p);
+-extern void		cupsdDeletePrinterFromClass(cupsd_printer_t *c,
++extern int		cupsdDeletePrinterFromClass(cupsd_printer_t *c,
+ 			                            cupsd_printer_t *p);
+-extern void		cupsdDeletePrinterFromClasses(cupsd_printer_t *p);
++extern int		cupsdDeletePrinterFromClasses(cupsd_printer_t *p);
+ extern cupsd_printer_t	*cupsdFindAvailablePrinter(const char *name);
+ extern cupsd_printer_t	*cupsdFindClass(const char *name);
+ extern void		cupsdLoadAllClasses(void);
+diff -up cups-1.4.2/scheduler/ipp.c.str3505 cups-1.4.2/scheduler/ipp.c
+--- cups-1.4.2/scheduler/ipp.c.str3505	2010-03-03 12:04:36.586619281 +0000
++++ cups-1.4.2/scheduler/ipp.c	2010-03-03 12:05:43.777744781 +0000
+@@ -6881,7 +6881,9 @@ delete_printer(cupsd_client_t  *con,	/* 
+     cupsdLogMessage(CUPSD_LOG_INFO, "Printer \"%s\" deleted by \"%s\".",
+                     printer->name, get_username(con));
+ 
+-    cupsdDeletePrinter(printer, 0);
++    if (cupsdDeletePrinter(printer, 0))
++      cupsdMarkDirty(CUPSD_DIRTY_CLASSES);
++
+     cupsdMarkDirty(CUPSD_DIRTY_PRINTERS);
+   }
+ 
+diff -up cups-1.4.2/scheduler/printers.c.str3505 cups-1.4.2/scheduler/printers.c
+--- cups-1.4.2/scheduler/printers.c.str3505	2010-03-03 12:04:36.634619324 +0000
++++ cups-1.4.2/scheduler/printers.c	2010-03-03 12:05:43.789619509 +0000
+@@ -663,12 +663,13 @@ cupsdDeleteAllPrinters(void)
+  * 'cupsdDeletePrinter()' - Delete a printer from the system.
+  */
+ 
+-void
++int					/* O - 1 if classes affected, 0 otherwise */
+ cupsdDeletePrinter(
+     cupsd_printer_t *p,			/* I - Printer to delete */
+     int             update)		/* I - Update printers.conf? */
+ {
+-  int	i;				/* Looping var */
++  int	i,				/* Looping var */
++	changed = 0;			/* Class changed? */
+ #ifdef __sgi
+   char	filename[1024];			/* Interface script filename */
+ #endif /* __sgi */
+@@ -779,7 +780,7 @@ cupsdDeletePrinter(
+ 
+   if (!(p->type & CUPS_PRINTER_IMPLICIT))
+   {
+-    cupsdDeletePrinterFromClasses(p);
++    changed = cupsdDeletePrinterFromClasses(p);
+ 
+    /*
+     * Deregister from any browse protocols...
+@@ -860,6 +861,8 @@ cupsdDeletePrinter(
+   */
+ 
+   cupsArrayRestore(Printers);
++
++  return (changed);
+ }
+ 
+ 
+diff -up cups-1.4.2/scheduler/printers.h.str3505 cups-1.4.2/scheduler/printers.h
+--- cups-1.4.2/scheduler/printers.h.str3505	2009-06-25 18:07:26.000000000 +0100
++++ cups-1.4.2/scheduler/printers.h	2010-03-03 12:05:43.794620336 +0000
+@@ -141,7 +141,7 @@ extern void		cupsdAddPrinterUser(cupsd_p
+ 			                    const char *username);
+ extern void		cupsdCreateCommonData(void);
+ extern void		cupsdDeleteAllPrinters(void);
+-extern void		cupsdDeletePrinter(cupsd_printer_t *p, int update);
++extern int		cupsdDeletePrinter(cupsd_printer_t *p, int update);
+ extern cupsd_printer_t	*cupsdFindDest(const char *name);
+ extern cupsd_printer_t	*cupsdFindPrinter(const char *name);
+ extern cupsd_quota_t	*cupsdFindQuota(cupsd_printer_t *p,

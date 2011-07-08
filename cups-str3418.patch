@@ -1,0 +1,90 @@
+diff -up cups-1.4.2/cgi-bin/admin.c.str3418 cups-1.4.2/cgi-bin/admin.c
+--- cups-1.4.2/cgi-bin/admin.c.str3418	2009-11-17 13:23:51.130084685 +0000
++++ cups-1.4.2/cgi-bin/admin.c	2009-11-17 13:23:56.773209143 +0000
+@@ -1261,7 +1261,7 @@ do_am_printer(http_t *http,		/* I - HTTP
+       * Got the list of PPDs, see if the user has selected a make...
+       */
+ 
+-      if (cgiSetIPPVars(response, NULL, NULL, NULL, 0) == 0)
++      if (cgiSetIPPVars(response, NULL, NULL, NULL, 0) == 0 && !modify)
+       {
+        /*
+         * No PPD files with this make, try again with all makes...
+@@ -1297,8 +1297,11 @@ do_am_printer(http_t *http,		/* I - HTTP
+ 	*/
+ 
+         cgiStartHTML(title);
+-	cgiSetVariable("CURRENT_MAKE_AND_MODEL",
+-	               cgiGetArray("PPD_MAKE_AND_MODEL", 0));
++	if (!cgiGetVariable("PPD_MAKE"))
++	  cgiSetVariable("PPD_MAKE", cgiGetVariable("CURRENT_MAKE"));
++	if (!modify)
++	  cgiSetVariable("CURRENT_MAKE_AND_MODEL",
++	                 cgiGetArray("PPD_MAKE_AND_MODEL", 0));
+ 	cgiCopyTemplateLang("choose-model.tmpl");
+         cgiEndHTML();
+       }
+@@ -1590,7 +1593,7 @@ do_config_server(http_t *http)		/* I - H
+ #ifdef HAVE_GSSAPI
+     char		default_auth_type[255];
+ 					/* DefaultAuthType value */
+-    const char		*val;		/* Setting value */ 
++    const char		*val;		/* Setting value */
+ #endif /* HAVE_GSSAPI */
+ 
+ 
+@@ -1662,7 +1665,7 @@ do_config_server(http_t *http)		/* I - H
+ 	  strcat(local_protocols, "slp");
+       }
+ #endif /* HAVE_SLP */
+-      
++
+       if (cgiGetVariable("BROWSE_REMOTE_CUPS"))
+ 	strcpy(remote_protocols, "cups");
+       else
+@@ -1915,7 +1918,7 @@ do_config_server(http_t *http)		/* I - H
+       cgiSetVariable("ERROR", strerror(errno));
+       cgiCopyTemplateLang("error.tmpl");
+       cgiEndHTML();
+-      
++
+       perror(tempfile);
+       return;
+     }
+@@ -1927,7 +1930,7 @@ do_config_server(http_t *http)		/* I - H
+       cgiSetVariable("ERROR", strerror(errno));
+       cgiCopyTemplateLang("error.tmpl");
+       cgiEndHTML();
+-      
++
+       perror(tempfile);
+       close(tempfd);
+       unlink(tempfile);
+@@ -3342,7 +3345,7 @@ do_set_options(http_t *http,		/* I - HTT
+           ((ppdattr = ppdFindAttr(ppd, "cupsCommands", NULL)) != NULL &&
+            ppdattr->value && strstr(ppdattr->value, "AutoConfigure")))
+         cgiSetVariable("HAVE_AUTOCONFIGURE", "YES");
+-      else 
++      else
+       {
+         for (i = 0; i < ppd->num_filters; i ++)
+ 	  if (!strncmp(ppd->filters[i], "application/vnd.cups-postscript", 31))
+@@ -3446,7 +3449,7 @@ do_set_options(http_t *http,		/* I - HTT
+ 	  cgiSetVariable("GROUP", group->text);
+ 
+ 	cgiCopyTemplateLang("option-header.tmpl");
+-	
++
+ 	for (j = group->num_options, option = group->options;
+ 	     j > 0;
+ 	     j --, option ++)
+@@ -4090,7 +4093,7 @@ get_option_value(
+ 
+     snprintf(buffer, bufsize, "Custom.%gx%g%s", width, length, uval);
+   }
+-  else if (cupsArrayCount(coption->params) == 1) 
++  else if (cupsArrayCount(coption->params) == 1)
+   {
+     cparam = ppdFirstCustomParam(coption);
+     snprintf(keyword, sizeof(keyword), "%s.%s", coption->keyword, cparam->name);
+diff -up cups-1.4.2/CHANGES-1.4.txt.str3418 cups-1.4.2/CHANGES-1.4.txt

@@ -1,0 +1,35 @@
+diff -up cups-1.4.2/scheduler/client.c.cgi-vars cups-1.4.2/scheduler/client.c
+--- cups-1.4.2/scheduler/client.c.cgi-vars	2010-06-09 12:07:01.072021025 +0100
++++ cups-1.4.2/scheduler/client.c	2010-06-09 12:12:17.329019298 +0100
+@@ -4666,7 +4666,7 @@ pipe_command(cupsd_client_t *con,	/* I -
+   char		argbuf[10240],		/* Argument buffer */
+ 		*argv[100],		/* Argument strings */
+ 		*envp[MAX_ENV + 20];	/* Environment variables */
+-  char		auth_type[256],		/* CUPSD_AUTH_TYPE environment variable */
++  char		auth_type[256],		/* AUTH_TYPE environment variable */
+ 		content_length[1024],	/* CONTENT_LENGTH environment variable */
+ 		content_type[1024],	/* CONTENT_TYPE environment variable */
+ 		http_cookie[32768],	/* HTTP_COOKIE environment variable */
+@@ -4712,7 +4712,12 @@ pipe_command(cupsd_client_t *con,	/* I -
+   argv[0] = command;
+ 
+   if (options)
+-    strlcpy(argbuf, options, sizeof(argbuf));
++  {
++    commptr = options;
++    if (*commptr == ' ')
++      commptr ++;
++    strlcpy(argbuf, commptr, sizeof(argbuf));
++  }
+   else
+     argbuf[0] = '\0';
+ 
+@@ -4811,7 +4816,7 @@ pipe_command(cupsd_client_t *con,	/* I -
+ 
+   if (con->username[0])
+   {
+-    snprintf(auth_type, sizeof(auth_type), "CUPSD_AUTH_TYPE=%s",
++    snprintf(auth_type, sizeof(auth_type), "AUTH_TYPE=%s",
+              httpGetField(HTTP(con), HTTP_FIELD_AUTHORIZATION));
+ 
+     if ((uriptr = strchr(auth_type + 10, ' ')) != NULL)

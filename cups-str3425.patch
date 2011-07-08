@@ -1,0 +1,145 @@
+diff -up cups-1.4.2/scheduler/job.c.str3425 cups-1.4.2/scheduler/job.c
+--- cups-1.4.2/scheduler/job.c.str3425	2010-03-09 16:59:12.000000000 +0100
++++ cups-1.4.2/scheduler/job.c	2010-03-09 17:02:57.000000000 +0100
+@@ -253,7 +253,7 @@ cupsdCancelJobs(const char *dest,	/* I -
+       if (purge)
+ 	cupsdSetJobState(job, IPP_JOB_CANCELED, CUPSD_JOB_PURGE,
+ 	                 "Job purged by user.");
+-      else
++      else if (job->state_value < IPP_JOB_CANCELED)
+ 	cupsdSetJobState(job, IPP_JOB_CANCELED, CUPSD_JOB_DEFAULT,
+ 			 "Job canceled by user.");
+     }
+@@ -433,11 +433,11 @@ cupsdCleanJobs(void)
+   cupsd_job_t	*job;			/* Current job */
+ 
+ 
+-  if (MaxJobs <= 0)
++  if (MaxJobs <= 0 && JobHistory)
+     return;
+ 
+   for (job = (cupsd_job_t *)cupsArrayFirst(Jobs);
+-       job && cupsArrayCount(Jobs) >= MaxJobs;
++       job && (cupsArrayCount(Jobs) >= MaxJobs || !JobHistory);
+        job = (cupsd_job_t *)cupsArrayNext(Jobs))
+     if (job->state_value >= IPP_JOB_CANCELED && !job->printer)
+       cupsdDeleteJob(job, CUPSD_JOB_PURGE);
+@@ -2286,12 +2286,14 @@ cupsdSetJobState(
+   if (!cupsdLoadJob(job))
+     return;
+ 
+- /*
+-  * Don't do anything if the state is unchanged...
+-  */
+-
+-  if (newstate == (oldstate = job->state_value))
+-    return;
++  /*
++   * Don't do anything if the state is unchanged and we aren't purging the
++   * job...
++   */
++
++   oldstate = job->state_value;
++   if (newstate == oldstate && action != CUPSD_JOB_PURGE)
++     return;
+ 
+  /*
+   * Stop any processes that are working on the current job...
+@@ -2499,7 +2501,14 @@ cupsdSetJobState(
+ 	  cupsdMarkDirty(CUPSD_DIRTY_JOBS);
+ 	}
+ 	else if (!job->printer)
++	{
++	 /*
++	  * Delete the job immediately if not actively printing...
++	  */
++
+ 	  cupsdDeleteJob(job, CUPSD_JOB_PURGE);
++	  job = NULL;
++	}
+ 	break;
+   }
+ 
+@@ -2507,7 +2516,7 @@ cupsdSetJobState(
+   * Finalize the job immediately if we forced things...
+   */
+ 
+-  if (action == CUPSD_JOB_FORCE)
++  if (action >= CUPSD_JOB_FORCE && job && job->printer)
+     finalize_job(job);
+ 
+  /*
+diff -up cups-1.4.2/scheduler/main.c.str3425 cups-1.4.2/scheduler/main.c
+--- cups-1.4.2/scheduler/main.c.str3425	2010-03-09 16:59:12.000000000 +0100
++++ cups-1.4.2/scheduler/main.c	2010-03-09 16:59:12.000000000 +0100
+@@ -389,7 +389,7 @@ main(int  argc,				/* I - Number of comm
+     * parent's file descriptors to be blocking.  This is a workaround for a
+     * limitation of userland libpthread on OpenBSD.
+     */
+-   
++
+     _thread_sys_closefrom(0);
+ #endif /* __OpenBSD__ */
+ 
+@@ -817,8 +817,8 @@ main(int  argc,				/* I - Number of comm
+ 
+     if (timeout == 86400 && Launchd && LaunchdTimeout && !NumPolled &&
+         !cupsArrayCount(ActiveJobs) &&
+-	(!Browsing || 
+-	 (!BrowseRemoteProtocols && 
++	(!Browsing ||
++	 (!BrowseRemoteProtocols &&
+ 	  (!NumBrowsers || !BrowseLocalProtocols ||
+ 	   cupsArrayCount(Printers) == 0))))
+     {
+@@ -1046,6 +1046,7 @@ main(int  argc,				/* I - Number of comm
+     if ((current_time - senddoc_time) >= 10)
+     {
+       cupsdCheckJobs();
++      cupsdCleanJobs();
+       senddoc_time = current_time;
+     }
+ 
+@@ -1204,8 +1205,8 @@ main(int  argc,				/* I - Number of comm
+ #endif /* HAVE_GSSAPI */
+ 
+ #if defined(__APPLE__) && defined(HAVE_DLFCN_H)
+- /* 
+-  * Unload Print Service quota enforcement library (X Server only) 
++ /*
++  * Unload Print Service quota enforcement library (X Server only)
+   */
+ 
+   PSQUpdateQuotaProc = NULL;
+@@ -1562,13 +1563,13 @@ launchd_checkin(void)
+ 
+ 	if (lis)
+ 	{
+-	  cupsdLogMessage(CUPSD_LOG_DEBUG, 
++	  cupsdLogMessage(CUPSD_LOG_DEBUG,
+ 		  "launchd_checkin: Matched existing listener %s with fd %d...",
+ 		  httpAddrString(&(lis->address), s, sizeof(s)), fd);
+ 	}
+ 	else
+ 	{
+-	  cupsdLogMessage(CUPSD_LOG_DEBUG, 
++	  cupsdLogMessage(CUPSD_LOG_DEBUG,
+ 		  "launchd_checkin: Adding new listener %s with fd %d...",
+ 		  httpAddrString(&addr, s, sizeof(s)), fd);
+ 
+@@ -1622,12 +1623,12 @@ launchd_checkout(void)
+ 
+  /*
+   * Create or remove the launchd KeepAlive file based on whether
+-  * there are active jobs, polling, browsing for remote printers or 
++  * there are active jobs, polling, browsing for remote printers or
+   * shared printers to advertise...
+   */
+ 
+-  if ((cupsArrayCount(ActiveJobs) || NumPolled || 
+-       (Browsing && 
++  if ((cupsArrayCount(ActiveJobs) || NumPolled ||
++       (Browsing &&
+ 	(BrowseRemoteProtocols ||
+         (BrowseLocalProtocols && NumBrowsers && cupsArrayCount(Printers))))))
+   {

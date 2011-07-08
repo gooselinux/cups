@@ -1,0 +1,12 @@
+diff -up cups-1.4.1/cups/dest.c.str3285 cups-1.4.1/cups/dest.c
+--- cups-1.4.1/cups/dest.c.str3285	2009-10-27 12:50:04.560012076 +0000
++++ cups-1.4.1/cups/dest.c	2009-10-27 12:50:23.814012173 +0000
+@@ -549,7 +549,7 @@ cupsGetNamedDest(http_t     *http,	/* I 
+ 
+   if (!cups_get_sdests(http, op, name, 0, &dest))
+   {
+-    if (op == CUPS_GET_DEFAULT)
++    if (op == CUPS_GET_DEFAULT || (name && !set_as_default))
+       return (NULL);
+ 
+    /*

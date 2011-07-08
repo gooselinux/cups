@@ -1,0 +1,19 @@
+diff -up cups-1.4.2/backend/socket.c.str3495 cups-1.4.2/backend/socket.c
+--- cups-1.4.2/backend/socket.c.str3495	2010-02-25 14:47:02.000000000 +0100
++++ cups-1.4.2/backend/socket.c	2010-02-25 15:39:07.000000000 +0100
+@@ -406,6 +406,7 @@ main(int  argc,				/* I - Number of comm
+ 		      CUPS_LLCAST tbytes);
+   }
+ 
++#ifdef __APPLE__
+  /*
+   * Wait up to 5 seconds to get any pending back-channel data...
+   */
+@@ -414,6 +415,7 @@ main(int  argc,				/* I - Number of comm
+   while (wait_time >= time(&current_time))
+     if (wait_bc(device_fd, wait_time - current_time) <= 0)
+       break;
++#endif /* __APPLE__ */
+ 
+   if (waiteof)
+   {

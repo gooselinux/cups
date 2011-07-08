@@ -1,0 +1,57 @@
+diff -up cups-1.4.2/scheduler/ipp.c.str3428 cups-1.4.2/scheduler/ipp.c
+--- cups-1.4.2/scheduler/ipp.c.str3428	2009-12-08 12:24:31.177373309 +0000
++++ cups-1.4.2/scheduler/ipp.c	2009-12-08 12:27:33.910498083 +0000
+@@ -1860,8 +1860,6 @@ add_job(cupsd_client_t  *con,		/* I - Cl
+                               "job-media-sheets-completed", 0);
+   ippAddString(job->attrs, IPP_TAG_JOB, IPP_TAG_URI, "job-printer-uri", NULL,
+                printer->uri);
+-  ippAddString(job->attrs, IPP_TAG_JOB, IPP_TAG_NAME, "job-name", NULL,
+-               title);
+ 
+   if ((attr = ippFindAttribute(job->attrs, "job-k-octets",
+                                IPP_TAG_INTEGER)) != NULL)
+@@ -3438,7 +3436,7 @@ apple_register_profiles(
+       num_profiles ++;
+     }
+ 
+-  
++
+  /*
+   * If we have profiles, add them...
+   */
+@@ -3484,7 +3482,7 @@ apple_register_profiles(
+ 	snprintf(q_keyword, sizeof(q_keyword), "Default%s", attr->value);
+ 	q2_attr = ppdFindAttr(ppd, q_keyword, NULL);
+       }
+-      else 
++      else
+ 	q2_attr = ppdFindAttr(ppd, "DefaultMediaType", NULL);
+ 
+       if (q2_attr && q2_attr->value && q2_attr->value[0])
+@@ -3498,7 +3496,7 @@ apple_register_profiles(
+ 	snprintf(q_keyword, sizeof(q_keyword), "Default%s", attr->value);
+ 	q3_attr = ppdFindAttr(ppd, q_keyword, NULL);
+       }
+-      else 
++      else
+ 	q3_attr = ppdFindAttr(ppd, "DefaultResolution", NULL);
+ 
+       if (q3_attr && q3_attr->value && q3_attr->value[0])
+@@ -3667,7 +3665,7 @@ apple_register_profiles(
+     attr = ppdFindAttr(ppd, "DefaultColorSpace", NULL);
+ 
+     num_profiles = (attr && ppd->colorspace == PPD_CS_GRAY) ? 1 : 2;
+-      
++
+     if ((profiles = calloc(num_profiles, sizeof(CMDeviceProfileArray))) == NULL)
+     {
+       cupsdLogMessage(CUPSD_LOG_ERROR,
+@@ -4762,7 +4760,7 @@ check_quotas(cupsd_client_t  *con,	/* I 
+     if (q->page_count == -4) /* special case: unlimited user */
+     {
+       cupsdLogMessage(CUPSD_LOG_INFO,
+-                      "User \"%s\" request approved for printer %s (%s): " 
++                      "User \"%s\" request approved for printer %s (%s): "
+ 		      "unlimited quota.",
+ 		      username, p->name, p->info);
+       q->page_count = 0; /* allow user to print */

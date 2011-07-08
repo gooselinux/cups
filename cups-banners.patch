@@ -1,0 +1,11 @@
+--- cups-1.2rc2/scheduler/banners.c.banners	2006-04-19 16:12:07.000000000 +0100
++++ cups-1.2rc2/scheduler/banners.c	2006-04-19 16:12:42.000000000 +0100
+@@ -119,6 +119,8 @@
+     if ((ext = strrchr(dent->filename, '.')) != NULL)
+       if (!strcmp(ext, ".bck") ||
+           !strcmp(ext, ".bak") ||
++          !strcmp(ext, ".rpmnew") ||
++          !strcmp(ext, ".rpmsave") ||
+ 	  !strcmp(ext, ".sav"))
+ 	continue;
+ 

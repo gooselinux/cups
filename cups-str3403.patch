@@ -1,0 +1,84 @@
+diff -up cups-1.4.2/templates/admin.tmpl.str3403 cups-1.4.2/templates/admin.tmpl
+--- cups-1.4.2/templates/admin.tmpl.str3403	2008-09-26 16:52:03.000000000 +0100
++++ cups-1.4.2/templates/admin.tmpl	2009-11-16 17:21:56.108541688 +0000
+@@ -20,7 +20,7 @@
+ <H2 CLASS="title">Jobs</H2>
+ 
+ <P>
+-<FORM ACTION="/jobs/" METHDO="GET"><INPUT TYPE="SUBMIT" VALUE="Manage Jobs"></FORM>
++<FORM ACTION="/jobs/" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Manage Jobs"></FORM>
+ </P>
+ 
+ </TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD VALIGN="TOP">
+diff -up cups-1.4.2/templates/de/admin.tmpl.str3403 cups-1.4.2/templates/de/admin.tmpl
+--- cups-1.4.2/templates/de/admin.tmpl.str3403	2009-04-03 16:55:28.000000000 +0100
++++ cups-1.4.2/templates/de/admin.tmpl	2009-11-16 17:21:56.109542590 +0000
+@@ -20,7 +20,7 @@
+ <H2 CLASS="title">Druckauftr&auml;ge</H2>
+ 
+ <P>
+-<FORM ACTION="/jobs/" METHDO="GET"><INPUT TYPE="SUBMIT" VALUE="Auftr&auml;ge verwalten"></FORM>
++<FORM ACTION="/jobs/" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Auftr&auml;ge verwalten"></FORM>
+ </P>
+ 
+ </TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD VALIGN="TOP">
+diff -up cups-1.4.2/templates/es/admin.tmpl.str3403 cups-1.4.2/templates/es/admin.tmpl
+--- cups-1.4.2/templates/es/admin.tmpl.str3403	2009-01-10 00:26:04.000000000 +0000
++++ cups-1.4.2/templates/es/admin.tmpl	2009-11-16 17:21:56.120542504 +0000
+@@ -20,7 +20,7 @@
+ <H2 CLASS="title">Trabajos</H2>
+ 
+ <P>
+-<FORM ACTION="/jobs/" METHDO="GET"><INPUT TYPE="SUBMIT" VALUE="Administrar trabajos"></FORM>
++<FORM ACTION="/jobs/" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Administrar trabajos"></FORM>
+ </P>
+ 
+ </TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD VALIGN="TOP">
+diff -up cups-1.4.2/templates/eu/admin.tmpl.str3403 cups-1.4.2/templates/eu/admin.tmpl
+--- cups-1.4.2/templates/eu/admin.tmpl.str3403	2009-07-07 17:52:34.000000000 +0100
++++ cups-1.4.2/templates/eu/admin.tmpl	2009-11-16 17:21:56.120542504 +0000
+@@ -20,7 +20,7 @@
+ <H2 CLASS="title">Lanak</H2>
+ 
+ <P>
+-<FORM ACTION="/jobs/" METHDO="GET"><INPUT TYPE="SUBMIT" VALUE="Kudeatu lanak"></FORM>
++<FORM ACTION="/jobs/" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Kudeatu lanak"></FORM>
+ </P>
+ 
+ </TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD VALIGN="TOP">
+diff -up cups-1.4.2/templates/ja/admin.tmpl.str3403 cups-1.4.2/templates/ja/admin.tmpl
+--- cups-1.4.2/templates/ja/admin.tmpl.str3403	2009-02-17 19:04:25.000000000 +0000
++++ cups-1.4.2/templates/ja/admin.tmpl	2009-11-16 17:21:56.120542504 +0000
+@@ -20,7 +20,7 @@
+ <H2 CLASS="title">ジョブ</H2>
+ 
+ <P>
+-<FORM ACTION="/jobs/" METHDO="GET"><INPUT TYPE="SUBMIT" VALUE="ジョブの管理"></FORM>
++<FORM ACTION="/jobs/" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="ジョブの管理"></FORM>
+ </P>
+ 
+ </TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD VALIGN="TOP">
+diff -up cups-1.4.2/templates/pl/admin.tmpl.str3403 cups-1.4.2/templates/pl/admin.tmpl
+--- cups-1.4.2/templates/pl/admin.tmpl.str3403	2009-02-25 16:48:35.000000000 +0000
++++ cups-1.4.2/templates/pl/admin.tmpl	2009-11-16 17:21:56.121542314 +0000
+@@ -20,7 +20,7 @@
+ <H2 CLASS="title">Zadania</H2>
+ 
+ <P>
+-<FORM ACTION="/jobs/" METHDO="GET"><INPUT TYPE="SUBMIT" VALUE="Zarządzanie zadaniami"></FORM>
++<FORM ACTION="/jobs/" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Zarządzanie zadaniami"></FORM>
+ </P>
+ 
+ </TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD VALIGN="TOP">
+diff -up cups-1.4.2/templates/ru/admin.tmpl.str3403 cups-1.4.2/templates/ru/admin.tmpl
+--- cups-1.4.2/templates/ru/admin.tmpl.str3403	2009-10-26 16:01:08.000000000 +0000
++++ cups-1.4.2/templates/ru/admin.tmpl	2009-11-16 17:21:56.121542314 +0000
+@@ -20,7 +20,7 @@
+ <H2 CLASS="title">Задания</H2>
+ 
+ <P>
+-<FORM ACTION="/jobs/" METHDO="GET"><INPUT TYPE="SUBMIT" VALUE="Управление заданиями"></FORM>
++<FORM ACTION="/jobs/" METHOD="GET"><INPUT TYPE="SUBMIT" VALUE="Управление заданиями"></FORM>
+ </P>
+ 
+ </TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD VALIGN="TOP">

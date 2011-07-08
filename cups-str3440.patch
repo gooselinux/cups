@@ -1,0 +1,104 @@
+diff -up cups-1.4.2/cgi-bin/admin.c.str3440 cups-1.4.2/cgi-bin/admin.c
+--- cups-1.4.2/cgi-bin/admin.c.str3440	2009-12-08 10:10:05.529157178 +0000
++++ cups-1.4.2/cgi-bin/admin.c	2009-12-08 10:10:12.571033051 +0000
+@@ -3436,6 +3436,16 @@ do_set_options(http_t *http,		/* I - HTT
+ 	    {
+ 	      cgiSetArray("ckeyword", k, option->keyword);
+ 	      cgiSetArray("ckeytext", k, option->text);
++
++	      for (m = 0; m < option->num_choices; m ++)
++	      {
++	        if (option->choices[m].marked)
++	        {
++	          cgiSetArray("cchoice", k, option->choices[m].text);
++	          break;
++	        }
++              }
++
+ 	      k ++;
+ 	    }
+ 
+diff -up cups-1.4.2/templates/de/option-conflict.tmpl.str3440 cups-1.4.2/templates/de/option-conflict.tmpl
+--- cups-1.4.2/templates/de/option-conflict.tmpl.str3440	2009-04-03 16:55:28.000000000 +0100
++++ cups-1.4.2/templates/de/option-conflict.tmpl	2009-12-08 10:10:12.567157789 +0000
+@@ -1,7 +1,7 @@
+ <P><B>Error:</B> The following options are conflicting:</P>
+ 
+ <UL>
+-{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A></LI>
++{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A>: {cchoice}</LI>
+ }</UL>
+ 
+ <P>Bitte &auml;ndern sie eine oder mehrere Einstellungen um die Konflikte zu l&ouml;sen.</P>
+diff -up cups-1.4.2/templates/es/option-conflict.tmpl.str3440 cups-1.4.2/templates/es/option-conflict.tmpl
+--- cups-1.4.2/templates/es/option-conflict.tmpl.str3440	2008-12-08 21:20:06.000000000 +0000
++++ cups-1.4.2/templates/es/option-conflict.tmpl	2009-12-08 10:10:12.568157603 +0000
+@@ -1,7 +1,7 @@
+ <P><B>Error:</B> Las siguientes opciones est&aacute;n en conflicto:</P>
+ 
+ <UL>
+-{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A></LI>
++{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A>: {cchoice}</LI>
+ }</UL>
+ 
+ <P>Cambie una o m&aacute;s de las opciones para resolver el problema.</P>
+diff -up cups-1.4.2/templates/eu/option-conflict.tmpl.str3440 cups-1.4.2/templates/eu/option-conflict.tmpl
+--- cups-1.4.2/templates/eu/option-conflict.tmpl.str3440	2009-07-07 17:52:34.000000000 +0100
++++ cups-1.4.2/templates/eu/option-conflict.tmpl	2009-12-08 10:10:12.569157261 +0000
+@@ -1,7 +1,7 @@
+ <P><B>Errorea:</B> honako aukerak gatazkan daude:</P>
+ 
+ <UL>
+-{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A></LI>
++{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A>: {cchoice}</LI>
+ }</UL>
+ 
+ <P>Aldatu aukera bat edo gehiago gatazkak ebazteko.</P>
+diff -up cups-1.4.2/templates/ja/option-conflict.tmpl.str3440 cups-1.4.2/templates/ja/option-conflict.tmpl
+--- cups-1.4.2/templates/ja/option-conflict.tmpl.str3440	2009-02-17 19:04:25.000000000 +0000
++++ cups-1.4.2/templates/ja/option-conflict.tmpl	2009-12-08 10:10:12.566157419 +0000
+@@ -1,7 +1,7 @@
+ <P><B>エラー:</B> 以下のオプションは競合します:</P>
+ 
+ <UL>
+-{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A></LI>
++{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A>: {cchoice}</LI>
+ }</UL>
+ 
+ <P>競合を解決するために、1 つ以上のオプションを変更してください。</P>
+diff -up cups-1.4.2/templates/option-conflict.tmpl.str3440 cups-1.4.2/templates/option-conflict.tmpl
+--- cups-1.4.2/templates/option-conflict.tmpl.str3440	2005-08-24 20:25:49.000000000 +0100
++++ cups-1.4.2/templates/option-conflict.tmpl	2009-12-08 10:10:12.566157419 +0000
+@@ -1,7 +1,7 @@
+ <P><B>Error:</B> The following options are conflicting:</P>
+ 
+ <UL>
+-{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A></LI>
++{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A>: {cchoice}</LI>
+ }</UL>
+ 
+ <P>Please change one or more of the options to resolve the conflicts.</P>
+diff -up cups-1.4.2/templates/pl/option-conflict.tmpl.str3440 cups-1.4.2/templates/pl/option-conflict.tmpl
+--- cups-1.4.2/templates/pl/option-conflict.tmpl.str3440	2009-02-25 16:48:35.000000000 +0000
++++ cups-1.4.2/templates/pl/option-conflict.tmpl	2009-12-08 10:10:12.567157789 +0000
+@@ -1,7 +1,7 @@
+ <P><B>Błąd:</B> następujące opcje są w konflikcie ze sobą:</P>
+ 
+ <UL>
+-{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A></LI>
++{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A>: {cchoice}</LI>
+ }</UL>
+ 
+ <P>Proszę zmienić jedną lub więcej opcji, aby rozwiązać konflikt.</P>
+diff -up cups-1.4.2/templates/ru/option-conflict.tmpl.str3440 cups-1.4.2/templates/ru/option-conflict.tmpl
+--- cups-1.4.2/templates/ru/option-conflict.tmpl.str3440	2009-02-17 19:04:25.000000000 +0000
++++ cups-1.4.2/templates/ru/option-conflict.tmpl	2009-12-08 10:10:12.567157789 +0000
+@@ -1,7 +1,7 @@
+ <P><B>Ошибка:</B> следующие параметры конфликтуют:</P>
+ 
+ <UL>
+-{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A></LI>
++{[ckeyword]<LI><A HREF="#{ckeyword}">{ckeytext}</A>: {cchoice}</LI>
+ }</UL>
+ 
+ <P>Измените один или несколько параметров для того, чтобы избежать конфликта.</P>

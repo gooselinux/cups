@@ -1,0 +1,32 @@
+diff -up cups-1.4.2/scheduler/ipp.c.str3431 cups-1.4.2/scheduler/ipp.c
+--- cups-1.4.2/scheduler/ipp.c.str3431	2009-12-08 12:28:21.095374048 +0000
++++ cups-1.4.2/scheduler/ipp.c	2009-12-08 12:32:03.829498891 +0000
+@@ -7183,6 +7183,7 @@ get_job_attrs(cupsd_client_t  *con,	/* I
+   ipp_attribute_t *attr;		/* Current attribute */
+   int		jobid;			/* Job ID */
+   cupsd_job_t	*job;			/* Current job */
++  cupsd_printer_t *printer;		/* Current printer */
+   char		scheme[HTTP_MAX_URI],	/* Method portion of URI */
+ 		username[HTTP_MAX_URI],	/* Username portion of URI */
+ 		host[HTTP_MAX_URI],	/* Host portion of URI */
+@@ -7257,7 +7258,19 @@ get_job_attrs(cupsd_client_t  *con,	/* I
+   * Check policy...
+   */
+ 
+-  if ((status = cupsdCheckPolicy(DefaultPolicyPtr, con, NULL)) != HTTP_OK)
++  if ((printer = job->printer) == NULL)
++    printer = cupsdFindDest(job->dest);
++
++  if (printer)
++  {
++    if ((status = cupsdCheckPolicy(printer->op_policy_ptr, con,
++                                   NULL)) != HTTP_OK)
++    {
++      send_http_error(con, status, printer);
++      return;
++    }
++  }
++  else if ((status = cupsdCheckPolicy(DefaultPolicyPtr, con, NULL)) != HTTP_OK)
+   {
+     send_http_error(con, status, NULL);
+     return;

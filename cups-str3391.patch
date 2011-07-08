@@ -1,0 +1,196 @@
+diff -up cups-1.4.1/templates/add-printer.tmpl.str3391 cups-1.4.1/templates/add-printer.tmpl
+--- cups-1.4.1/templates/add-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/add-printer.tmpl	2009-10-27 15:08:45.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ {?current_make!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE" VALUE="{current_make}">:}
+ {?current_make_and_model!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE_AND_MODEL" VALUE="{current_make_and_model}">:}
+ 
+diff -up cups-1.4.1/templates/de/add-printer.tmpl.str3391 cups-1.4.1/templates/de/add-printer.tmpl
+--- cups-1.4.1/templates/de/add-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/de/add-printer.tmpl	2009-10-27 15:08:56.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ {?current_make!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE" VALUE="{current_make}">:}
+ {?current_make_and_model!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE_AND_MODEL" VALUE="{current_make_and_model}">:}
+ 
+diff -up cups-1.4.1/templates/de/modify-printer.tmpl.str3391 cups-1.4.1/templates/de/modify-printer.tmpl
+--- cups-1.4.1/templates/de/modify-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/de/modify-printer.tmpl	2009-10-27 15:10:28.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ <INPUT TYPE="HIDDEN" NAME="PRINTER_NAME" VALUE="{printer_name}">
+ 
+ <TABLE>
+diff -up cups-1.4.1/templates/es/add-printer.tmpl.str3391 cups-1.4.1/templates/es/add-printer.tmpl
+--- cups-1.4.1/templates/es/add-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/es/add-printer.tmpl	2009-10-27 15:09:02.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ {?current_make!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE" VALUE="{current_make}">:}
+ {?current_make_and_model!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE_AND_MODEL" VALUE="{current_make_and_model}">:}
+ 
+diff -up cups-1.4.1/templates/es/modify-printer.tmpl.str3391 cups-1.4.1/templates/es/modify-printer.tmpl
+--- cups-1.4.1/templates/es/modify-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/es/modify-printer.tmpl	2009-10-27 15:10:32.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ <INPUT TYPE="HIDDEN" NAME="PRINTER_NAME" VALUE="{printer_name}">
+ 
+ <TABLE>
+diff -up cups-1.4.1/templates/eu/add-printer.tmpl.str3391 cups-1.4.1/templates/eu/add-printer.tmpl
+--- cups-1.4.1/templates/eu/add-printer.tmpl.str3391	2009-07-07 18:52:34.000000000 +0200
++++ cups-1.4.1/templates/eu/add-printer.tmpl	2009-10-27 15:09:08.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ {?current_make!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE" VALUE="{current_make}">:}
+ {?current_make_and_model!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE_AND_MODEL" VALUE="{current_make_and_model}">:}
+ 
+diff -up cups-1.4.1/templates/eu/modify-printer.tmpl.str3391 cups-1.4.1/templates/eu/modify-printer.tmpl
+--- cups-1.4.1/templates/eu/modify-printer.tmpl.str3391	2009-07-07 18:52:34.000000000 +0200
++++ cups-1.4.1/templates/eu/modify-printer.tmpl	2009-10-27 15:10:37.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ <INPUT TYPE="HIDDEN" NAME="PRINTER_NAME" VALUE="{printer_name}">
+ 
+ <TABLE>
+diff -up cups-1.4.1/templates/ja/add-printer.tmpl.str3391 cups-1.4.1/templates/ja/add-printer.tmpl
+--- cups-1.4.1/templates/ja/add-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/ja/add-printer.tmpl	2009-10-27 15:09:15.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ {?current_make!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE" VALUE="{current_make}">:}
+ {?current_make_and_model!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE_AND_MODEL" VALUE="{current_make_and_model}">:}
+ 
+diff -up cups-1.4.1/templates/ja/modify-printer.tmpl.str3391 cups-1.4.1/templates/ja/modify-printer.tmpl
+--- cups-1.4.1/templates/ja/modify-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/ja/modify-printer.tmpl	2009-10-27 15:10:40.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ <INPUT TYPE="HIDDEN" NAME="PRINTER_NAME" VALUE="{printer_name}">
+ 
+ <TABLE>
+diff -up cups-1.4.1/templates/modify-printer.tmpl.str3391 cups-1.4.1/templates/modify-printer.tmpl
+--- cups-1.4.1/templates/modify-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/modify-printer.tmpl	2009-10-27 15:10:23.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ <INPUT TYPE="HIDDEN" NAME="PRINTER_NAME" VALUE="{printer_name}">
+ 
+ <TABLE>
+diff -up cups-1.4.1/templates/pl/add-printer.tmpl.str3391 cups-1.4.1/templates/pl/add-printer.tmpl
+--- cups-1.4.1/templates/pl/add-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/pl/add-printer.tmpl	2009-10-27 15:09:20.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ {?current_make!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE" VALUE="{current_make}">:}
+ {?current_make_and_model!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE_AND_MODEL" VALUE="{current_make_and_model}">:}
+ 
+diff -up cups-1.4.1/templates/pl/modify-printer.tmpl.str3391 cups-1.4.1/templates/pl/modify-printer.tmpl
+--- cups-1.4.1/templates/pl/modify-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/pl/modify-printer.tmpl	2009-10-27 15:10:44.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ <INPUT TYPE="HIDDEN" NAME="PRINTER_NAME" VALUE="{printer_name}">
+ 
+ <TABLE>
+diff -up cups-1.4.1/templates/ru/add-printer.tmpl.str3391 cups-1.4.1/templates/ru/add-printer.tmpl
+--- cups-1.4.1/templates/ru/add-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/ru/add-printer.tmpl	2009-10-27 15:09:24.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ {?current_make!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE" VALUE="{current_make}">:}
+ {?current_make_and_model!?<INPUT TYPE="HIDDEN" NAME="CURRENT_MAKE_AND_MODEL" VALUE="{current_make_and_model}">:}
+ 
+diff -up cups-1.4.1/templates/ru/modify-printer.tmpl.str3391 cups-1.4.1/templates/ru/modify-printer.tmpl
+--- cups-1.4.1/templates/ru/modify-printer.tmpl.str3391	2009-06-18 19:23:21.000000000 +0200
++++ cups-1.4.1/templates/ru/modify-printer.tmpl	2009-10-27 15:10:48.000000000 +0100
+@@ -4,6 +4,10 @@
+ 
+ <FORM METHOD="POST" ACTION="/admin">
+ <INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
+ <INPUT TYPE="HIDDEN" NAME="PRINTER_NAME" VALUE="{printer_name}">
+ 
+ <TABLE>

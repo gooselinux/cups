@@ -1,0 +1,14 @@
+diff -up cups-1.4.2/backend/ipp.c.str3460 cups-1.4.2/backend/ipp.c
+--- cups-1.4.2/backend/ipp.c.str3460	2010-01-15 10:25:14.720258721 +0000
++++ cups-1.4.2/backend/ipp.c	2010-01-15 10:28:57.218384231 +0000
+@@ -1435,7 +1435,10 @@ main(int  argc,				/* I - Number of comm
+   else if (ipp_status > IPP_OK_CONFLICT)
+     return (CUPS_BACKEND_FAILED);
+   else
++  {
++    _cupsLangPuts(stderr, _("INFO: Ready to print.\n"));
+     return (CUPS_BACKEND_OK);
++  }
+ }
+ 
+ 

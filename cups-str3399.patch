@@ -1,0 +1,48 @@
+diff -up cups-1.4.2/CHANGES-1.4.txt.str3399 cups-1.4.2/CHANGES-1.4.txt
+diff -up cups-1.4.2/scheduler/process.c.str3399 cups-1.4.2/scheduler/process.c
+--- cups-1.4.2/scheduler/process.c.str3399	2009-05-16 04:04:48.000000000 +0100
++++ cups-1.4.2/scheduler/process.c	2009-11-16 17:15:26.104542409 +0000
+@@ -505,6 +505,7 @@ cupsdStartProcess(
+ #ifdef HAVE_SIGSET
+     sigset(SIGTERM, SIG_DFL);
+     sigset(SIGCHLD, SIG_DFL);
++    sigset(SIGPIPE, SIG_DFL);
+ #elif defined(HAVE_SIGACTION)
+     memset(&action, 0, sizeof(action));
+ 
+@@ -513,9 +514,11 @@ cupsdStartProcess(
+ 
+     sigaction(SIGTERM, &action, NULL);
+     sigaction(SIGCHLD, &action, NULL);
++    sigaction(SIGPIPE, &action, NULL);
+ #else
+     signal(SIGTERM, SIG_DFL);
+     signal(SIGCHLD, SIG_DFL);
++    signal(SIGPIPE, SIG_DFL);
+ #endif /* HAVE_SIGSET */
+ 
+     cupsdReleaseSignals();
+--- cups-1.4.2/scheduler/main.c.str3399	2010-03-02 11:04:28.968100478 +0000
++++ cups-1.4.2/scheduler/main.c	2010-03-02 11:04:47.442226409 +0000
+@@ -1733,7 +1733,7 @@ process_children(void)
+ 	  job->backend = -pid;
+ 
+ 	if (status && status != SIGTERM && status != SIGKILL &&
+-	    job->status >= 0)
++	    status != SIGPIPE && job->status >= 0)
+ 	{
+ 	 /*
+ 	  * An error occurred; save the exit status so we know to stop
+@@ -1829,6 +1829,12 @@ process_children(void)
+                       "PID %d (%s) was terminated normally with signal %d.",
+                       pid, name, status);
+     }
++    else if (status == SIGPIPE)
++    {
++      cupsdLogMessage(CUPSD_LOG_DEBUG,
++                      "PID %d (%s) did not catch or ignore signal %d.",
++                      pid, name, status);
++    }
+     else if (status)
+     {
+       if (WIFEXITED(status))

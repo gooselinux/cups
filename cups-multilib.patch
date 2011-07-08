@@ -1,0 +1,15 @@
+--- cups-1.2.3/cups-config.in.multilib	2006-08-03 01:54:38.000000000 +0100
++++ cups-1.2.3/cups-config.in	2006-08-30 15:47:35.000000000 +0100
+@@ -30,8 +30,10 @@
+ exec_prefix=@exec_prefix@
+ bindir=@bindir@
+ includedir=@includedir@
+-libdir=@libdir@
+-imagelibdir=@libdir@
++# Fetch libdir from gnutls's pkg-config script.  This is a bit
++# of a cheat, but the cups-devel package requires gnutls-devel anyway.
++libdir=`pkg-config --variable=libdir gnutls`
++imagelibdir=`pkg-config --variable=libdir gnutls`
+ datarootdir=@datadir@
+ datadir=@datadir@
+ sysconfdir=@sysconfdir@

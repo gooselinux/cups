@@ -1,0 +1,132 @@
+diff -up cups-1.4.2/backend/backend-private.h.media-empty-warning cups-1.4.2/backend/backend-private.h
+--- cups-1.4.2/backend/backend-private.h.media-empty-warning	2009-08-31 19:45:43.000000000 +0100
++++ cups-1.4.2/backend/backend-private.h	2009-12-08 11:22:27.859488572 +0000
+@@ -280,7 +280,8 @@ extern int		backendNetworkSideCB(int pri
+ 			                     int snmp_fd, http_addr_t *addr,
+ 					     int use_bc);
+ extern ssize_t		backendRunLoop(int print_fd, int device_fd, int snmp_fd,
+-			               http_addr_t *addr, int use_bc,
++			               http_addr_t *addr, int use_bc, 
++			               int update_state, 
+ 				       int (*side_cb)(int print_fd,
+ 				                      int device_fd,
+ 						      int snmp_fd,
+diff -up cups-1.4.2/backend/ipp.c.media-empty-warning cups-1.4.2/backend/ipp.c
+--- cups-1.4.2/backend/ipp.c.media-empty-warning	2009-12-08 11:22:12.388488617 +0000
++++ cups-1.4.2/backend/ipp.c	2009-12-08 11:22:27.860488582 +0000
+@@ -498,7 +498,7 @@ main(int  argc,				/* I - Number of comm
+ 
+     _cupsLangPuts(stderr, _("INFO: Copying print data...\n"));
+ 
+-    tbytes = backendRunLoop(-1, fd, snmp_fd, &(addrlist->addr), 0,
++    tbytes = backendRunLoop(-1, fd, snmp_fd, &(addrlist->addr), 0, 0,
+                             backendNetworkSideCB);
+ 
+     if (snmp_fd >= 0)
+diff -up cups-1.4.2/backend/lpd.c.media-empty-warning cups-1.4.2/backend/lpd.c
+--- cups-1.4.2/backend/lpd.c.media-empty-warning	2009-06-26 19:26:36.000000000 +0100
++++ cups-1.4.2/backend/lpd.c	2009-12-08 11:22:27.861488697 +0000
+@@ -447,7 +447,8 @@ main(int  argc,				/* I - Number of comm
+ 
+     _cupsLangPuts(stderr, _("INFO: Copying print data...\n"));
+ 
+-    backendRunLoop(-1, fd, snmp_fd, &(addrlist->addr), 0, backendNetworkSideCB);
++    backendRunLoop(-1, fd, snmp_fd, &(addrlist->addr), 0, 0, 
++		   backendNetworkSideCB);
+ 
+     if (snmp_fd >= 0)
+       _cupsSNMPClose(snmp_fd);
+diff -up cups-1.4.2/backend/parallel.c.media-empty-warning cups-1.4.2/backend/parallel.c
+--- cups-1.4.2/backend/parallel.c.media-empty-warning	2009-08-31 19:45:43.000000000 +0100
++++ cups-1.4.2/backend/parallel.c	2009-12-08 11:22:27.862488185 +0000
+@@ -284,7 +284,7 @@ main(int  argc,				/* I - Number of comm
+       lseek(print_fd, 0, SEEK_SET);
+     }
+ 
+-    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, side_cb);
++    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, 1, side_cb);
+ 
+     if (print_fd != 0 && tbytes >= 0)
+       _cupsLangPrintf(stderr,
+diff -up cups-1.4.2/backend/runloop.c.media-empty-warning cups-1.4.2/backend/runloop.c
+--- cups-1.4.2/backend/runloop.c.media-empty-warning	2009-08-31 19:45:43.000000000 +0100
++++ cups-1.4.2/backend/runloop.c	2009-12-08 11:22:27.862488185 +0000
+@@ -147,6 +147,7 @@ backendRunLoop(
+     int         snmp_fd,		/* I - SNMP socket or -1 if none */
+     http_addr_t *addr,			/* I - Address of device */
+     int         use_bc,			/* I - Use back-channel? */
++    int         update_state,		/* I - Update printer-state-reasons? */
+     int         (*side_cb)(int, int, int, http_addr_t *, int))
+ 					/* I - Side-channel callback */
+ {
+@@ -245,7 +246,7 @@ backendRunLoop(
+ 	* Pause printing to clear any pending errors...
+ 	*/
+ 
+-	if (errno == ENXIO && offline != 1)
++	if (errno == ENXIO && offline != 1 && update_state)
+ 	{
+ 	  fputs("STATE: +offline-report\n", stderr);
+ 	  _cupsLangPuts(stderr, _("INFO: Printer is currently offline.\n"));
+@@ -351,7 +352,7 @@ backendRunLoop(
+ 
+         if (errno == ENOSPC)
+ 	{
+-	  if (paperout != 1)
++	  if (paperout != 1 && update_state)
+ 	  {
+ 	    fputs("STATE: +media-empty-warning\n", stderr);
+ 	    _cupsLangPuts(stderr, _("ERROR: Out of paper!\n"));
+@@ -360,7 +361,7 @@ backendRunLoop(
+         }
+ 	else if (errno == ENXIO)
+ 	{
+-	  if (offline != 1)
++	  if (offline != 1 && update_state)
+ 	  {
+ 	    fputs("STATE: +offline-report\n", stderr);
+ 	    _cupsLangPuts(stderr, _("INFO: Printer is currently off-line.\n"));
+@@ -376,13 +377,13 @@ backendRunLoop(
+       }
+       else
+       {
+-        if (paperout)
++        if (paperout && update_state)
+ 	{
+ 	  fputs("STATE: -media-empty-warning\n", stderr);
+ 	  paperout = 0;
+ 	}
+ 
+-	if (offline)
++	if (offline && update_state)
+ 	{
+ 	  fputs("STATE: -offline-report\n", stderr);
+ 	  _cupsLangPuts(stderr, _("INFO: Printer is now online.\n"));
+diff -up cups-1.4.2/backend/socket.c.media-empty-warning cups-1.4.2/backend/socket.c
+--- cups-1.4.2/backend/socket.c.media-empty-warning	2009-06-12 05:02:45.000000000 +0100
++++ cups-1.4.2/backend/socket.c	2009-12-08 11:22:27.863488075 +0000
+@@ -393,7 +393,7 @@ main(int  argc,				/* I - Number of comm
+       lseek(print_fd, 0, SEEK_SET);
+     }
+ 
+-    tbytes = backendRunLoop(print_fd, device_fd, snmp_fd, &(addr->addr), 1,
++    tbytes = backendRunLoop(print_fd, device_fd, snmp_fd, &(addr->addr), 1, 0, 
+                             backendNetworkSideCB);
+ 
+     if (print_fd != 0 && tbytes >= 0)
+diff -up cups-1.4.2/backend/usb-unix.c.media-empty-warning cups-1.4.2/backend/usb-unix.c
+--- cups-1.4.2/backend/usb-unix.c.media-empty-warning	2009-12-08 11:22:12.445487428 +0000
++++ cups-1.4.2/backend/usb-unix.c	2009-12-08 11:22:27.864488180 +0000
+@@ -218,10 +218,10 @@ print_device(const char *uri,		/* I - De
+     * select() or poll(), so we can't support the sidechannel either...
+     */
+ 
+-    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, NULL);
++    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, 1, NULL);
+ 
+ #else
+-    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, side_cb);
++    tbytes = backendRunLoop(print_fd, device_fd, -1, NULL, use_bc, 1, side_cb);
+ #endif /* __sun */
+ 
+     if (print_fd != 0 && tbytes >= 0)

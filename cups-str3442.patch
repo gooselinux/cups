@@ -1,0 +1,11 @@
+diff -up cups-1.4.2/conf/mime.convs.in.str3442 cups-1.4.2/conf/mime.convs.in
+--- cups-1.4.2/conf/mime.convs.in.str3442	2009-05-22 20:30:39.000000000 +0100
++++ cups-1.4.2/conf/mime.convs.in	2009-12-08 10:19:40.044329553 +0000
+@@ -47,6 +47,7 @@ application/x-perl		application/postscri
+ application/x-shell		application/postscript		33	texttops
+ text/plain			application/postscript		33	texttops
+ text/html			application/postscript		33	texttops
++text/css			application/postscript		33	texttops
+ image/gif			application/vnd.cups-postscript	66	imagetops
+ image/png			application/vnd.cups-postscript	66	imagetops
+ image/jpeg			application/vnd.cups-postscript	66	imagetops
