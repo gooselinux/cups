@@ -9,7 +9,7 @@
 Summary: Common Unix Printing System
 Name: cups
 Version: 1.4.2
-Release: 35%{?dist}
+Release: 35%{?dist}.1
 License: GPLv2
 Group: System Environment/Daemons
 Source: http://ftp.easysw.com/pub/cups/%{version}/cups-%{version}-source.tar.bz2
@@ -102,6 +102,7 @@ Patch63: cups-CVE-2010-0542.patch
 Patch64: cups-CVE-2010-1748.patch
 Patch65: cups-CVE-2010-2432.patch
 Patch66: cups-CVE-2010-2431.patch
+Patch67: cups-CVE-2010-2941.patch
 
 Patch100: cups-lspp.patch
 
@@ -377,6 +378,9 @@ module.
 # Fix latent privilege escalation vulnerability (STR # #3510,
 # bug #604728, CVE-2010-2431).
 %patch66 -p1 -b .CVE-2010-2431
+# Applied patch to fix cupsd memory corruption vulnerability
+# (CVE-2010-2941, STR #3648, bug #624438).
+%patch67 -p1 -b .CVE-2010-2941
 
 %if %lspp
 # LSPP support.
@@ -676,6 +680,10 @@ rm -rf $RPM_BUILD_ROOT
 %{php_extdir}/phpcups.so
 
 %changelog
+* Tue Oct 26 2010 Tim Waugh <twaugh@redhat.com> 1:1.4.2-35:.1
+- Applied patch to fix cupsd memory corruption vulnerability
+  (CVE-2010-2941, STR #3648, bug #624438).
+
 * Fri Jul 16 2010 Tim Waugh <twaugh@redhat.com> 1:1.4.2-35
 - Set org.cups.sid form variable in choose-device template (bug #615269).
 
